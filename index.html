@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cash/8.1.1/cash.min.js"></script>
+
+</head>
+<body>
+    <h1>CHAT</h1>
+    <div id="h3"></div>
+    <input id="iptext" type="text">
+    <script>
+        const socket=io()
+        
+        //connecta
+        socket.on('connect',()=>{
+            console.log('estou conectado com o socket '+ socket.id)
+        })
+        //rescebe
+        socket.on('recebe',(msg,id)=>{
+            $('#h3').append(`${id}:${msg}<br>`).css({color:'red'})
+            
+        })
+        
+        id=prompt('nick')
+        //envia
+        document.addEventListener('keydown',(key)=>{
+            console.log(key.keyCode)
+            if(key.keyCode == 13 && $('#iptext').val() != ''){
+                text=document.querySelector('#iptext')
+                
+                socket.emit('envia',text.value,id) 
+                $(`<h3>${id}:${text.value}</h3>`).appendTo('#h3').css({color:'blue'})
+                text.value=''
+            }
+        })
+
+    </script>
+</body>
+<style>
+    body{
+        background-color: rgb(88, 244, 111);
+    }
+    #h3{
+        text-transform: uppercase;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+    }
+    #iptext{
+        cursor:pointer;
+        border: 1px solid black;
+        text-transform: uppercase;
+        height: 20px;
+        width: 300px;
+        margin-top: 10px;
+        text-align: right;
+        border-radius: 50px;
+        box-shadow: 0px 0px 20px green;
+        background-color: rgb(88,244,100);
+    }
+</style>
+</html>
